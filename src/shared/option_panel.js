@@ -30,33 +30,35 @@ const stringValueMap = {};
 
 export async function setupModelFolder(gui, urlParams) {
   // The model folder contains options for model selection.
-  const modelFolder = gui.addFolder('Model');
+  const modelFolder = gui.addFolder('Opciones de modelo');
 
-  const model = urlParams.get('model');
+  const model = urlParams.model;
 
   switch (model) {
     case 'mediapipe_face_mesh':
       params.STATE.model =
-          faceLandmarksDetection.SupportedModels.MediaPipeFaceMesh;
+        faceLandmarksDetection.SupportedModels.MediaPipeFaceMesh;
       break;
     default:
       alert(`${urlParams.get('model')} is not a supported model. `
-	    + 'Redirecting to mediapipe_face_mesh');
+        + 'Redirecting to mediapipe_face_mesh');
       const url = new URL(window.location.href);
       url.searchParams.set('model', 'mediapipe_face_mesh');
       window.location.href = url;
       break;
   }
 
-  const modelController = modelFolder.add(
-      params.STATE, 'model',
-      Object.values(faceLandmarksDetection.SupportedModels));
+  // const modelController = modelFolder.add(
+  //   params.STATE, 'model',
+  //   Object.values(faceLandmarksDetection.SupportedModels));
 
-  modelController.onChange(_ => {
-    params.STATE.isModelChanged = true;
-    showModelConfigs(modelFolder);
-    showBackendConfigs(backendFolder);
-  });
+
+
+  // modelController.onChange(_ => {
+  //   params.STATE.isModelChanged = true;
+  //   showModelConfigs(modelFolder);
+  //   showBackendConfigs(backendFolder);
+  // });
 
   showModelConfigs(modelFolder);
 
@@ -76,14 +78,14 @@ async function showBackendConfigs(folderController) {
   const fixedSelectionCount = 0;
   while (folderController.__controllers.length > fixedSelectionCount) {
     folderController.remove(
-        folderController
-            .__controllers[folderController.__controllers.length - 1]);
+      folderController
+        .__controllers[folderController.__controllers.length - 1]);
   }
   const backends = params.MODEL_BACKEND_MAP[params.STATE.model];
   // The first element of the array is the default backend for the model.
   params.STATE.backend = backends[0];
   const backendController =
-      folderController.add(params.STATE, 'backend', backends);
+    folderController.add(params.STATE, 'backend', backends);
   backendController.name('runtime-backend');
   backendController.onChange(async backend => {
     params.STATE.isBackendChanged = true;
@@ -99,8 +101,8 @@ function showModelConfigs(folderController) {
   const fixedSelectionCount = 1;
   while (folderController.__controllers.length > fixedSelectionCount) {
     folderController.remove(
-        folderController
-            .__controllers[folderController.__controllers.length - 1]);
+      folderController
+        .__controllers[folderController.__controllers.length - 1]);
   }
 
   switch (params.STATE.model) {
@@ -115,29 +117,29 @@ function showModelConfigs(folderController) {
 // The MediaPipeFaceMesh model config folder contains options for
 // MediaPipeFaceMesh config settings.
 function addMediaPipeFaceMeshControllers(modelConfigFolder) {
-  params.STATE.modelConfig = {...params.MEDIAPIPE_FACE_CONFIG};
+  params.STATE.modelConfig = { ...params.MEDIAPIPE_FACE_CONFIG };
 
   const boundingBoxController =
-      modelConfigFolder.add(params.STATE.modelConfig, 'boundingBox');
+    modelConfigFolder.add(params.STATE.modelConfig, 'boundingBox');
   boundingBoxController.onChange(_ => {
     params.STATE.isModelChanged = true;
   });
 
   const triangulateMeshController =
-      modelConfigFolder.add(params.STATE.modelConfig, 'triangulateMesh');
+    modelConfigFolder.add(params.STATE.modelConfig, 'triangulateMesh');
   triangulateMeshController.onChange(_ => {
     params.STATE.isModelChanged = true;
   });
 
   const refineLandmarksController =
-      modelConfigFolder.add(params.STATE.modelConfig, 'refineLandmarks');
+    modelConfigFolder.add(params.STATE.modelConfig, 'refineLandmarks');
   refineLandmarksController.onChange(_ => {
     params.STATE.isModelChanged = true;
   });
 
   const maxFacesController =
-      modelConfigFolder.add(params.STATE.modelConfig, 'maxFaces', 1, 10)
-          .step(1);
+    modelConfigFolder.add(params.STATE.modelConfig, 'maxFaces', 1, 10)
+      .step(1);
   maxFacesController.onChange(_ => {
     // Set isModelChanged to true, so that we don't render any result during
     // changing models.
@@ -154,7 +156,7 @@ async function initDefaultValueMap() {
   params.STATE.flags = {};
   for (const backend in params.BACKEND_FLAGS_MAP) {
     for (let index = 0; index < params.BACKEND_FLAGS_MAP[backend].length;
-         index++) {
+      index++) {
       const flag = params.BACKEND_FLAGS_MAP[backend][index];
       TUNABLE_FLAG_DEFAULT_VALUE_MAP[flag] = await tf.env().getAsync(flag);
     }
@@ -223,8 +225,8 @@ function showBackendFlagSettings(folderController, backendName) {
     // Heuristically consider a flag with at least two options as tunable.
     if (flagValueRange.length < 2) {
       console.warn(
-          `The ${flag} is considered as untunable, ` +
-          `because its value range is [${flagValueRange}].`);
+        `The ${flag} is considered as untunable, ` +
+        `because its value range is [${flagValueRange}].`);
       continue;
     }
 
@@ -235,7 +237,7 @@ function showBackendFlagSettings(folderController, backendName) {
     } else {
       // Show dropdown for other types of flags.
       flagController =
-          folderController.add(params.STATE.flags, flag, flagValueRange);
+        folderController.add(params.STATE.flags, flag, flagValueRange);
 
       // Because dat.gui always casts dropdown option values to string, we need
       // `stringValueMap` and `onFinishChange()` to recover the value type.
@@ -276,8 +278,8 @@ async function showFlagSettings(folderController, backendName) {
   const fixedSelectionCount = 1;
   while (folderController.__controllers.length > fixedSelectionCount) {
     folderController.remove(
-        folderController
-            .__controllers[folderController.__controllers.length - 1]);
+      folderController
+        .__controllers[folderController.__controllers.length - 1]);
   }
 
   // Show flag settings for the new backend.

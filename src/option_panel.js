@@ -22,7 +22,7 @@ export async function setupDatGui(urlParams) {
   gui.domElement.id = 'gui';
 
   // The camera folder contains options for video settings.
-  const cameraFolder = gui.addFolder('Camera');
+  const cameraFolder = gui.addFolder('Opciones de Cámara');
   const fpsController = cameraFolder.add(params.STATE.camera, 'targetFPS');
   fpsController.onFinishChange((_) => {
     params.STATE.isTargetFPSChanged = true;

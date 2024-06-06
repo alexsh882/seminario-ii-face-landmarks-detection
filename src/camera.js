@@ -1,23 +1,10 @@
-/**
- * @license
- * Copyright 2022 Google LLC. All Rights Reserved.
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * https://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- * =============================================================================
- */
+
 
 import {VIDEO_SIZE} from './shared/params';
 import {drawResults, isMobile} from './shared/util';
 
+
+//Clase para manejar la cámara frontal.
 export class Camera {
   constructor() {
     this.video = document.getElementById('video');
@@ -30,6 +17,7 @@ export class Camera {
    * @param cameraParam From app `STATE.camera`.
    */
   static async setupCamera(cameraParam) {
+    
     if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
       throw new Error(
           'Browser API navigator.mediaDevices.getUserMedia not available');
@@ -74,10 +62,7 @@ export class Camera {
     camera.canvas.height = videoHeight;
     const canvasContainer = document.querySelector('.canvas-wrapper');
     canvasContainer.style = `width: ${videoWidth}px; height: ${videoHeight}px`;
-
-    // Because the image from camera is mirrored, need to flip horizontally.
-    camera.ctx.translate(camera.video.videoWidth, 0);
-    camera.ctx.scale(-1, 1);
+   
 
     return camera;
   }
